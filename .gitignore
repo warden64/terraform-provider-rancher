@@ -1,4 +1,5 @@
 *.dll
+.goreleaser
 *.exe
 .DS_Store
 example.tf
