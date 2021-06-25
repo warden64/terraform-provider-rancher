@@ -1,5 +1,5 @@
 *.dll
-.goreleaser
+.goreleaser.yml
 *.exe
 .DS_Store
 example.tf
