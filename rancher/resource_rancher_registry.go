@@ -65,7 +65,7 @@ func resourceRancherRegistryCreate(d *schema.ResourceData, meta interface{}) err
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"active", "removed", "removing", "activating"},
+		Pending:    []string{"active", "removed", "removing", "activating", "registering"},
 		Target:     []string{"active"},
 		Refresh:    RegistryStateRefreshFunc(client, newRegistry.Id),
 		Timeout:    10 * time.Minute,
