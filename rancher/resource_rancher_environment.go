@@ -216,7 +216,29 @@ func resourceRancherEnvironmentDelete(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	if err := client.Project.Delete(env); err != nil {
+	// try to delete env, retry if API returned 500 statusCode
+	err = nil
+	maxAttempts := 5
+	sleep := 1 // sec
+	for i := 0; i < maxAttempts; i++ {
+		if i > 0 {
+			log.Printf("Retrying, sleeping for %ds before next attempt..", sleep)
+			time.Sleep(time.Duration(sleep) * time.Second)
+			sleep *= 2
+		}
+
+		err = client.Project.Delete(env)
+		if err == nil {
+			break
+		}
+
+		apiErr, ok := err.(*rancherClient.ApiError)
+		if !ok || apiErr.StatusCode != 500 {
+			return fmt.Errorf("Error deleting Environment: %s", err)
+		}
+		log.Printf("Received err: %s", err)
+	}
+	if err != nil {
 		return fmt.Errorf("Error deleting Environment: %s", err)
 	}
 
