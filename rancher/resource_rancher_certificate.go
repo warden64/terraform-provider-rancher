@@ -116,7 +116,7 @@ func resourceRancherCertificateCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	stateConf := &resource.StateChangeConf{
-		Pending:    []string{"active", "removed", "removing"},
+		Pending:    []string{"active", "removed", "removing", "activating"},
 		Target:     []string{"active"},
 		Refresh:    CertificateStateRefreshFunc(client, newCertificate.Id),
 		Timeout:    10 * time.Minute,
